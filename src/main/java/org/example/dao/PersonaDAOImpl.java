@@ -11,20 +11,19 @@ public class PersonaDAOImpl implements PersonaDAO {
     @Override
     public void insertar(Persona persona) {
 
-        String sql = "INSERT INTO Persona VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Persona VALUES (?, ?, ?, ?)";
 
         try (Connection conexion = ConexionBD.obtenerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql)) {
 
             ps.setInt(1, persona.getId());
             ps.setString(2, persona.getNombre());
-            ps.setString(3, persona.getApellido1());
-            ps.setString(4, persona.getApellido2());
-            ps.setString(5, persona.getDni());
+            ps.setString(3, persona.getApellido());
+            ps.setString(4, persona.getDocumento());
 
             ps.executeUpdate();
 
-            System.out.println("Persona añadida correctamente");
+            System.out.println("Persona registrada");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -34,19 +33,19 @@ public class PersonaDAOImpl implements PersonaDAO {
     @Override
     public void editar(Persona persona) {
 
-        String sql = "UPDATE Persona SET nombre=?, apellido1=?, apellido2=?, dni=? WHERE id=?";
+        String sql = "UPDATE Persona SET nombre=?, apellido=?, documento=? WHERE id=?";
 
         try (Connection conexion = ConexionBD.obtenerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql)) {
 
             ps.setString(1, persona.getNombre());
-            ps.setString(2, persona.getApellido1());
-            ps.setString(3, persona.getApellido2());
-            ps.setString(4, persona.getDni());
-            ps.setInt(5, persona.getId());
+            ps.setString(2, persona.getApellido());
+            ps.setString(3, persona.getDocumento());
+            ps.setInt(4, persona.getId());
+
             ps.executeUpdate();
 
-            System.out.println("Persona editada correctamente");
+            System.out.println("Persona editada");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -62,6 +61,7 @@ public class PersonaDAOImpl implements PersonaDAO {
              PreparedStatement ps = conexion.prepareStatement(sql)) {
 
             ps.setInt(1, id);
+
             ps.executeUpdate();
 
             System.out.println("Persona eliminada");
@@ -80,6 +80,7 @@ public class PersonaDAOImpl implements PersonaDAO {
              PreparedStatement ps = conexion.prepareStatement(sql)) {
 
             ps.setInt(1, id);
+
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -87,9 +88,8 @@ public class PersonaDAOImpl implements PersonaDAO {
                 return new Persona(
                         rs.getInt("id"),
                         rs.getString("nombre"),
-                        rs.getString("apellido1"),
-                        rs.getString("apellido2"),
-                        rs.getString("dni")
+                        rs.getString("apellido"),
+                        rs.getString("documento")
                 );
             }
 
@@ -104,6 +104,7 @@ public class PersonaDAOImpl implements PersonaDAO {
     public List<Persona> obtenerTodos() {
 
         List<Persona> lista = new ArrayList<>();
+
         String sql = "SELECT * FROM Persona";
 
         try (Connection conexion = ConexionBD.obtenerConexion();
@@ -115,9 +116,8 @@ public class PersonaDAOImpl implements PersonaDAO {
                 Persona p = new Persona(
                         rs.getInt("id"),
                         rs.getString("nombre"),
-                        rs.getString("apellido1"),
-                        rs.getString("apellido2"),
-                        rs.getString("dni")
+                        rs.getString("apellido"),
+                        rs.getString("documento")
                 );
 
                 lista.add(p);

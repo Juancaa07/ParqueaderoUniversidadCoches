@@ -1,29 +1,28 @@
 package org.example.dao;
 
-import org.example.model.coche;
+import org.example.model.Vehiculo;
 import org.example.util.ConexionBD;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class cocheDAOImpl implements cocheDAO {
+public class VehiculoDAOImpl implements VehiculoDAO {
 
     @Override
-    public void insertar(coche coche) {
+    public void insertar(Vehiculo vehiculo) {
 
-        String sql = "INSERT INTO coche VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Vehiculo VALUES (?, ?, ?)";
 
         try (Connection conexion = ConexionBD.obtenerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql)) {
 
-            ps.setString(1, coche.getMatricula());
-            ps.setString(2, coche.getMarca());
-            ps.setString(3, coche.getModelo());
-            ps.setInt(4, coche.getCaballos());
-            ps.setInt(5, coche.getPersonaid());
+            ps.setString(1, vehiculo.getPlaca());
+            ps.setString(2, vehiculo.getTipoVehiculo());
+            ps.setInt(3, vehiculo.getPersonaId());
+
             ps.executeUpdate();
 
-            System.out.println("Coche añadido correctamente");
+            System.out.println("Vehiculo registrado");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -31,21 +30,20 @@ public class cocheDAOImpl implements cocheDAO {
     }
 
     @Override
-    public void editar(coche coche) {
+    public void editar(Vehiculo vehiculo) {
 
-        String sql = "UPDATE coche SET marca=?, modelo=?, caballos=?, personaid=? WHERE matricula=?";
+        String sql = "UPDATE Vehiculo SET tipoVehiculo=?, persona_id=? WHERE placa=?";
 
         try (Connection conexion = ConexionBD.obtenerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql)) {
 
-            ps.setString(1, coche.getMarca());
-            ps.setString(2, coche.getModelo());
-            ps.setInt(3, coche.getCaballos());
-            ps.setInt(4, coche.getPersonaid());
-            ps.setString(5, coche.getMatricula());
+            ps.setString(1, vehiculo.getTipoVehiculo());
+            ps.setInt(2, vehiculo.getPersonaId());
+            ps.setString(3, vehiculo.getPlaca());
+
             ps.executeUpdate();
 
-            System.out.println("Coche editado correctamente");
+            System.out.println("Vehiculo editado");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -53,42 +51,43 @@ public class cocheDAOImpl implements cocheDAO {
     }
 
     @Override
-    public void eliminar(String matricula) {
+    public void eliminar(String placa) {
 
-        String sql = "DELETE FROM coche WHERE matricula=?";
+        String sql = "DELETE FROM Vehiculo WHERE placa=?";
 
         try (Connection conexion = ConexionBD.obtenerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql)) {
 
-            ps.setString(1, matricula);
+            ps.setString(1, placa);
+
             ps.executeUpdate();
 
-            System.out.println("Coche eliminado");
+            System.out.println("Vehiculo eliminado");
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
-    public coche buscarPorMatricula(String matricula) {
+    public Vehiculo buscarPorPlaca(String placa) {
 
-        String sql = "SELECT * FROM coche WHERE matricula=?";
+        String sql = "SELECT * FROM Vehiculo WHERE placa=?";
 
         try (Connection conexion = ConexionBD.obtenerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql)) {
 
-            ps.setString(1, matricula);
+            ps.setString(1, placa);
+
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
 
-                return new coche(
-                        rs.getString("matricula"),
-                        rs.getString("marca"),
-                        rs.getString("modelo"),
-                        rs.getInt("caballos"),
-                        rs.getInt("personaid")
+                return new Vehiculo(
+                        rs.getString("placa"),
+                        rs.getString("tipoVehiculo"),
+                        rs.getInt("persona_id")
                 );
             }
 
@@ -99,12 +98,13 @@ public class cocheDAOImpl implements cocheDAO {
         return null;
     }
 
+
     @Override
-    public List<coche> obtenerTodos() {
+    public List<Vehiculo> obtenerTodos() {
 
-        List<coche> lista = new ArrayList<>();
+        List<Vehiculo> lista = new ArrayList<>();
 
-        String sql = "SELECT * FROM coche";
+        String sql = "SELECT * FROM Vehiculo";
 
         try (Connection conexion = ConexionBD.obtenerConexion();
              Statement st = conexion.createStatement();
@@ -112,15 +112,13 @@ public class cocheDAOImpl implements cocheDAO {
 
             while (rs.next()) {
 
-                coche c = new coche(
-                        rs.getString("matricula"),
-                        rs.getString("marca"),
-                        rs.getString("modelo"),
-                        rs.getInt("caballos"),
-                        rs.getInt("personaid")
+                Vehiculo v = new Vehiculo(
+                        rs.getString("placa"),
+                        rs.getString("tipoVehiculo"),
+                        rs.getInt("persona_id")
                 );
 
-                lista.add(c);
+                lista.add(v);
             }
 
         } catch (SQLException e) {
@@ -129,4 +127,5 @@ public class cocheDAOImpl implements cocheDAO {
 
         return lista;
     }
+
 }

@@ -1,15 +1,15 @@
 package org.example.dao;
-import org.example.model.coche;
+
+import org.example.model.Vehiculo;
 import java.util.List;
 
-public interface cocheDAO {
+public interface VehiculoDAO {
 
-    void insertar(coche coche);
-    void editar(coche coche);
-    void eliminar(String matricula);
+    void insertar(Vehiculo vehiculo);
+    void editar(Vehiculo vehiculo);
+    void eliminar(String placa);
 
-    coche buscarPorMatricula(String matricula);
+    Vehiculo buscarPorPlaca(String placa);
 
-    List<coche> obtenerTodos();
-
+    List<Vehiculo> obtenerTodos();
 }
