@@ -8,12 +8,15 @@ public class ActivosVehiculoDAOImpl implements ActivosVehiculoDAO {
     @Override
     public void entradaVehiculo(String placa) {
 
-        String sql = "INSERT INTO ActivosVehiculo VALUES (?, NOW())";
+        String sql = "INSERT INTO ActivosVehiculo VALUES (?, ?)";
 
         try (Connection conexion = ConexionBD.obtenerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql)) {
 
             ps.setString(1, placa);
+
+            ps.setTimestamp(2,
+                    new Timestamp(System.currentTimeMillis()));
 
             ps.executeUpdate();
 
